@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { ChevronLeft, ChevronRight, ExternalLink, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { ChevronLeft, ChevronRight, ExternalLink, ZoomIn } from 'lucide-react';
 
 interface SampleImage {
   original: string;
@@ -25,14 +25,13 @@ interface Sample {
 }
 
 export function Samples() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImages, setLightboxImages] = useState<{original: string, annotated: string}[]>([]);
   const [currentLightboxIndex, setCurrentLightboxIndex] = useState(0);
   const [showAnnotated, setShowAnnotated] = useState(false);
-  const [sampleImageIndexes, setSampleImageIndexes] = useState<{[key: string]: number}>({});
-
-  const samples: Sample[] = [
+  
+  const samples: Sample[] = useMemo(() => [
     {
       id: 'sample1',
       title: 'Object Detection - Vehicle & Pedestrian Dataset',
@@ -139,26 +138,21 @@ export function Samples() {
         {
           original: '/images/samples/segmentation-original-2.jpg',
           annotated: '/images/samples/segmentation-annotated-2.png'
-        },
-        {
-          original: '/images/samples/segmentation-original-3.jpg',
-          annotated: '/images/samples/segmentation-annotated-3.png'
         }
       ],
       link: 'https://drive.google.com/file/d/1semantic-segmentation-sample/view?usp=drive_link'
     }
-  ];
+  ], []);
 
-  const lightboxRef = useRef<HTMLDivElement>(null);
-
-  // Initialize sample image indexes
-  useEffect(() => {
+  const [sampleImageIndexes, setSampleImageIndexes] = useState<{[key: string]: number}>(() => {
     const initialIndexes: {[key: string]: number} = {};
     samples.forEach(sample => {
       initialIndexes[sample.id] = 0;
     });
-    setSampleImageIndexes(initialIndexes);
-  }, []);
+    return initialIndexes;
+  });
+
+  const lightboxRef = useRef<HTMLDivElement>(null);
 
   const updateSampleImageIndex = (sampleId: string, direction: 'prev' | 'next') => {
     setSampleImageIndexes(prev => {
@@ -184,11 +178,31 @@ export function Samples() {
     setLightboxOpen(true);
   };
 
-  const closeLightbox = () => {
+  const closeLightbox = useCallback(() => {
     setLightboxOpen(false);
     setCurrentLightboxIndex(0);
     setShowAnnotated(false);
-  };
+  }, []);
+
+  const nextLightboxImage = useCallback(() => {
+    if (showAnnotated) {
+      // Move to next image with wraparound
+      setCurrentLightboxIndex((currentLightboxIndex + 1) % lightboxImages.length);
+      setShowAnnotated(false);
+    } else {
+      setShowAnnotated(true);
+    }
+  }, [showAnnotated, currentLightboxIndex, lightboxImages.length]);
+
+  const prevLightboxImage = useCallback(() => {
+    if (!showAnnotated) {
+      // Move to previous image with wraparound
+      setCurrentLightboxIndex((currentLightboxIndex - 1 + lightboxImages.length) % lightboxImages.length);
+      setShowAnnotated(true);
+    } else {
+      setShowAnnotated(false);
+    }
+  }, [showAnnotated, currentLightboxIndex, lightboxImages.length]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -209,35 +223,8 @@ export function Samples() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxOpen, showAnnotated, currentLightboxIndex, lightboxImages.length]);
+  }, [lightboxOpen, showAnnotated, currentLightboxIndex, lightboxImages.length, nextLightboxImage, prevLightboxImage, closeLightbox]);
 
-  const nextLightboxImage = () => {
-    if (showAnnotated) {
-      // Move to next image with wraparound
-      setCurrentLightboxIndex((currentLightboxIndex + 1) % lightboxImages.length);
-      setShowAnnotated(false);
-    } else {
-      setShowAnnotated(true);
-    }
-  };
-
-  const prevLightboxImage = () => {
-    if (!showAnnotated) {
-      // Move to previous image with wraparound
-      setCurrentLightboxIndex((currentLightboxIndex - 1 + lightboxImages.length) % lightboxImages.length);
-      setShowAnnotated(true);
-    } else {
-      setShowAnnotated(false);
-    }
-  };
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % samples.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + samples.length) % samples.length);
-  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -258,7 +245,7 @@ export function Samples() {
       document.removeEventListener('mousedown', handleClickOutside);
       document.body.style.cursor = 'default';
     };
-  }, [lightboxOpen]);
+  }, [lightboxOpen, closeLightbox]);
 
   const currentSample = samples[currentSlide];
 
@@ -276,7 +263,7 @@ export function Samples() {
 
         {/* Sample Sections */}
         <div className="space-y-16">
-          {samples.map((sample, index) => (
+          {samples.map((sample) => (
             <div key={sample.id} className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-8 border border-gray-200 relative">
               {/* Sample Header */}
               <div className="text-center mb-8">
