@@ -70,7 +70,7 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="relative h-[700px] lg:h-full lg:min-h-screen animate-float group cursor-pointer overflow-hidden order-last lg:order-last">
+          <div className="relative h-[700px] lg:h-full w-[600px] lg:min-h-screen animate-float group cursor-pointer overflow-hidden order-last lg:order-last">
             <div className="absolute inset-0 bg-gradient-to-l from-transparent via-blue-900/20 to-blue-800/30 z-10"></div>
             <img
               src="/images/hero/profile.jpg"

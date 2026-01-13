@@ -30,6 +30,23 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (open && !target.closest('nav')) {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [open]);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -103,7 +120,7 @@ export function Navigation() {
       </div>
 
       {open && (
-        <div className="md:hidden absolute right-4 top-24 bg-white shadow-lg  rounded-lg p-4 min-w-fit">
+        <div className="md:hidden absolute right-4 top-24 bg-white shadow-xl rounded-xl p-5 min-w-[250px]">
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -111,7 +128,7 @@ export function Navigation() {
                 scrollToSection(item.id);
                 setOpen(false);
               }}
-              className={`block w-full text-left px-3 py-2 text-xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ${
+              className={`block w-full text-left px-4 py-3 text-2xl font-semibold text-gray-700 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ${
                 activeSection === item.id 
                   ? 'text-blue-700 underline underline-offset-4 decoration-4 decoration-blue-700' 
                   : 'hover:underline underline-offset-4 decoration-4 decoration-blue-700'
