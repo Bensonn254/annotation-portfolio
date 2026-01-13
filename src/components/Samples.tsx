@@ -12,10 +12,8 @@ interface Sample {
   type: 'detection' | 'classification' | 'qa' | 'segmentation';
   description: string;
   format: string;
-  images: number;
   tags: string[];
   gallery: SampleImage[];
-  qaChecks?: string[];
   annotationType?: string;
   classes?: string;
   tool?: string;
@@ -25,11 +23,11 @@ interface Sample {
 }
 
 export function Samples() {
-  const [currentSlide] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImages, setLightboxImages] = useState<{original: string, annotated: string}[]>([]);
   const [currentLightboxIndex, setCurrentLightboxIndex] = useState(0);
   const [showAnnotated, setShowAnnotated] = useState(false);
+  const [currentLightboxSample, setCurrentLightboxSample] = useState<Sample | null>(null);
   
   const samples: Sample[] = useMemo(() => [
     {
@@ -38,7 +36,6 @@ export function Samples() {
       type: 'detection',
       description: 'Bounding boxes around people and vehicles using consistent label definitions. Annotations follow tight box placement rules with proper class labeling.',
       format: 'YOLO',
-      images: 250,
       tags: ['CVAT', 'YOLO', 'Quality Check'],
       gallery: [
         {
@@ -66,7 +63,6 @@ export function Samples() {
       type: 'classification',
       description: 'Grocery images classified into predefined product categories using consistent labeling rules. Each image assigned to specific classes based on content analysis.',
       format: 'CSV',
-      images: 520,
       tags: ['CSV', 'Label Studio', 'Multi-class'],
       gallery: [
         {
@@ -98,7 +94,6 @@ export function Samples() {
       type: 'qa',
       description: 'Reviewed annotations for missing labels, inconsistent classes, and box placement issues. Corrected errors and documented edge cases for consistency.',
       format: 'YOLO',
-      images: 180,
       tags: ['Quality Assurance', 'Error Detection', 'Documentation'],
       qaChecks: ['Missing annotations', 'Duplicate boxes', 'Box tightness & overlap', 'Class consistency', 'Edge cases'],
       gallery: [
@@ -109,10 +104,6 @@ export function Samples() {
         {
           original: '/images/samples/street_scene_cars 2_mislabelled.jpg',
           annotated: '/images/samples/street_scene_cars 2_well labelled 2.jpg'
-        },
-        {
-          original: '/images/samples/sample3-before.jpg',
-          annotated: '/images/samples/sample3-after.jpg'
         }
       ],
       link: 'https://drive.google.com/file/d/1ErGgkq7u5AiSgxWR4vB0poHM4lsx1jSu/view?usp=drive_link'
@@ -123,7 +114,6 @@ export function Samples() {
       type: 'segmentation',
       description: 'Pixel-level semantic segmentation performed to accurately separate foreground objects from background. Focused on clean boundaries, consistent class application, and guideline-driven labeling for computer vision training.',
       format: 'COCO',
-      images: 150,
       tags: ['CVAT', 'Roboflow', 'PNG Masks'],
       annotationType: 'Semantic segmentation',
       classes: 'Road, Vehicle, Background',
@@ -132,15 +122,23 @@ export function Samples() {
       qa: 'Boundary review, class consistency',
       gallery: [
         {
-          original: '/images/samples/segmentation-original-1.jpg',
-          annotated: '/images/samples/segmentation-annotated-1.png'
+          original: '/images/samples/Street-scene-5.jpg',
+          annotated: '/images/samples/Street-scene-5-labelled.jpg'
         },
         {
-          original: '/images/samples/segmentation-original-2.jpg',
-          annotated: '/images/samples/segmentation-annotated-2.png'
+          original: '/images/samples/Street-scene-6.jpg',
+          annotated: '/images/samples/Street-scene-6-labelled.jpg'
+        },
+        {
+          original: '/images/samples/Street-scene-7.jpg',
+          annotated: '/images/samples/Street-scene-7-labbeled.jpg'
+        },
+        {
+          original: '/images/samples/Street-scene-8.jpg',
+          annotated: '/images/samples/Street-scene-8-labelled.jpg'
         }
       ],
-      link: 'https://drive.google.com/file/d/1semantic-segmentation-sample/view?usp=drive_link'
+      link: 'https://drive.google.com/file/d/1Ia8Y8aqbTWzctvH2ODAaqFn4hhsvdpKF/view?usp=drive_link'
     }
   ], []);
 
@@ -176,6 +174,7 @@ export function Samples() {
     setCurrentLightboxIndex(0);
     setShowAnnotated(false);
     setLightboxOpen(true);
+    setCurrentLightboxSample(sample);
   };
 
   const closeLightbox = useCallback(() => {
@@ -247,7 +246,6 @@ export function Samples() {
     };
   }, [lightboxOpen, closeLightbox]);
 
-  const currentSample = samples[currentSlide];
 
   return (
     <section id="samples" className="py-20 bg-white">
@@ -272,7 +270,7 @@ export function Samples() {
               </div>
 
               {/* Before/After Images */}
-              <div className="grid lg:grid-cols-2 gap-8 mb-8">
+              <div className={`grid lg:grid-cols-2 gap-8 mb-8 ${sample.type === 'segmentation' ? 'lg:gap-12' : ''}`}>
                 {/* Before Image */}
                 <div className="relative group cursor-pointer" onClick={() => openLightbox(sample)}>
                   <div className="absolute -top-3 left-4 bg-gray-700 text-white px-3 py-1 rounded-lg text-2xl z-10">
@@ -282,7 +280,7 @@ export function Samples() {
                     <img
                       src={sample.gallery[sampleImageIndexes[sample.id] || 0]?.original}
                       alt="Before annotation"
-                      className="w-full h-200 object-cover transition-transform duration-300"
+                      className={`w-full object-cover transition-transform duration-300 ${sample.type === 'segmentation' ? 'h-96 lg:h-[500px]' : 'h-200'}`}
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
                       <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -327,7 +325,7 @@ export function Samples() {
                     <img
                       src={sample.gallery[sampleImageIndexes[sample.id] || 0]?.annotated}
                       alt="After annotation"
-                      className="w-full h-200 object-cover transition-transform duration-300"
+                      className={`w-full object-cover transition-transform duration-300 ${sample.type === 'segmentation' ? 'h-96 lg:h-[500px]' : 'h-200'}`}
                     />
                     <div className="absolute inset-0 bg-blue-700/10 border-2 border-amber-500/50"></div>
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
@@ -346,10 +344,6 @@ export function Samples() {
                   <div className="flex items-center space-x-2 text-2xl">
                     <span className="text-gray-500">Format:</span>
                     <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-2xl">{sample.format}</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-2xl">
-                    <span className="text-gray-500">Images:</span>
-                    <span className="text-gray-900 text-2xl">{sample.images}</span>
                   </div>
                   {sample.annotationType && (
                     <div className="flex items-center space-x-2 text-2xl">
@@ -471,7 +465,7 @@ export function Samples() {
             {/* Bottom Navigation Bar */}
             <div className="flex justify-between items-center mt-6">
               <div className="text-white text-xl">
-                {currentSample.title}
+                {currentLightboxSample?.title}
               </div>
               <button
                 onClick={closeLightbox}
