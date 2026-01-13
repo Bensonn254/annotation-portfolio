@@ -13,11 +13,8 @@ export function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Show success message
     setShowSuccess(true);
-    // Reset form
     setFormData({ name: '', email: '', message: '', file: null });
-    // Hide success message after 5 seconds
     setTimeout(() => setShowSuccess(false), 5000);
   };
 
@@ -59,7 +56,6 @@ Thanks!`;
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-screen-2xl mx-auto">
-          {/* Contact Form */}
           <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-8 border border-blue-100">
             <h3 className="text-4xl text-gray-900 mb-6">Send a Message</h3>
             
@@ -152,7 +148,6 @@ Thanks!`;
               </button>
             </form>
 
-            {/* Success Message */}
             {showSuccess && (
               <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start space-x-3">
                 <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
@@ -164,9 +159,7 @@ Thanks!`;
             )}
           </div>
 
-          {/* Contact Info & Template */}
           <div className="space-y-8">
-            {/* Contact Information */}
             <div className="bg-gradient-to-br from-blue-700 to-cyan-600 rounded-2xl p-8 text-white">
               <h3 className="text-4xl mb-6">Get in Touch</h3>
               
@@ -196,7 +189,6 @@ Thanks!`;
               </div>
             </div>
 
-            {/* Message Template */}
             <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-3xl text-gray-900">Message Template</h3>

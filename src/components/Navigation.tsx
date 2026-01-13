@@ -9,7 +9,6 @@ export function Navigation() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
       
-      // Determine active section based on scroll position
       const sections = ['hero', 'services', 'how-it-works', 'samples', 'about', 'testimonials', 'pricing', 'contact'];
       const scrollPosition = window.scrollY + 100;
       
@@ -26,7 +25,7 @@ export function Navigation() {
     };
     
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check initial position
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 

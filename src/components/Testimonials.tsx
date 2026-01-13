@@ -47,24 +47,20 @@ export function Testimonials() {
               key={index}
               className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-8 border border-blue-100 hover:shadow-xl transition-shadow relative"
             >
-              {/* Quote Icon */}
               <div className="absolute top-6 right-6 opacity-10">
                 <Quote className="w-16 h-16 text-blue-700" />
               </div>
 
-              {/* Rating */}
               <div className="flex space-x-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-amber-500 text-amber-500" />
                 ))}
               </div>
 
-              {/* Quote */}
               <p className="text-gray-700 mb-6 leading-relaxed relative z-10">
                 "{testimonial.quote}"
               </p>
 
-              {/* Author */}
               <div className="flex items-center space-x-4">
                 <img
                   src={testimonial.image}
@@ -81,7 +77,6 @@ export function Testimonials() {
           ))}
         </div>
 
-        {/* Trust Indicators */}
         <div className="mt-16 bg-gradient-to-r from-blue-700 to-cyan-600 rounded-2xl p-8 text-white">
           <div className="grid md:grid-cols-4 gap-8 text-center">
             <div>

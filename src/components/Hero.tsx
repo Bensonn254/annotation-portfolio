@@ -17,7 +17,6 @@ export function Hero() {
 
   return (
     <section id="hero" className="pt-24 sm:pt-32 md:pt-36 lg:pt-40 xl:pt-48 pb-20 bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 overflow-hidden relative min-h-screen">
-      {/* Decorative Background Elements */}
       <div className="absolute -right-20 -top-20 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute -left-20 -bottom-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
       

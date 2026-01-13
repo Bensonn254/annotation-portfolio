@@ -259,19 +259,15 @@ export function Samples() {
           </p>
         </div>
 
-        {/* Sample Sections */}
         <div className="space-y-16">
           {samples.map((sample) => (
             <div key={sample.id} className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-8 border border-gray-200 relative">
-              {/* Sample Header */}
               <div className="text-center mb-8">
                 <h3 className="text-2xl md:text-3xl lg:text-4xl text-gray-900 mb-4">{sample.title}</h3>
                 <p className="text-lg md:text-xl lg:text-2xl text-gray-600 max-w-2xl mx-auto">{sample.description}</p>
               </div>
 
-              {/* Before/After Images */}
               <div className={`grid lg:grid-cols-2 gap-8 mb-8 ${sample.type === 'segmentation' ? 'lg:gap-12' : ''}`}>
-                {/* Before Image */}
                 <div className="relative group cursor-pointer" onClick={() => openLightbox(sample)}>
                   <div className="absolute -top-3 left-4 bg-gray-700 text-white px-3 py-1 rounded-lg text-2xl z-10">
                     Before
@@ -291,9 +287,7 @@ export function Samples() {
                   </div>
                 </div>
 
-                {/* After Image */}
                 <div className="relative group cursor-pointer" onClick={() => openLightbox(sample)}>
-                  {/* Slide Counter */}
                   <div className="absolute -top-20 right-0 bg-gray-800 text-white px-7 py-4 rounded-lg flex items-center space-x-2 z-20">
                     <button
                       onClick={(e) => {
@@ -338,7 +332,6 @@ export function Samples() {
                 </div>
               </div>
 
-              {/* Sample Details */}
               <div className="bg-white rounded-xl p-6 border border-gray-200">
                 <div className="flex flex-wrap gap-4 mb-4">
                   <div className="flex items-center space-x-2 text-2xl">
@@ -353,7 +346,6 @@ export function Samples() {
                   )}
                 </div>
 
-                {/* Additional details for segmentation */}
                 {sample.type === 'segmentation' && (
                   <div className="grid md:grid-cols-2 gap-4 mb-4 text-2xl">
                     {sample.classes && (
@@ -394,7 +386,6 @@ export function Samples() {
                   ))}
                 </div>
 
-                {/* Google Drive Link */}
                 <div className="mt-6 text-center">
                   <a
                     href={sample.link}
@@ -412,7 +403,6 @@ export function Samples() {
         </div>
       </div>
 
-      {/* Lightbox */}
       {lightboxOpen && (
         <div 
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 cursor-zoom-out"
@@ -420,7 +410,6 @@ export function Samples() {
         >
           <div className="relative max-w-6xl max-h-full" ref={lightboxRef} onClick={(e) => e.stopPropagation()}>
             <div className="relative">
-              {/* Navigation Arrows */}
               <button
                 onClick={prevLightboxImage}
                 className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-colors z-10"
@@ -435,7 +424,6 @@ export function Samples() {
                 <ChevronRight className="w-6 h-6" />
               </button>
 
-              {/* Image Counter */}
               <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-2 rounded-lg text-xl z-10">
                 {currentLightboxIndex + 1} / {lightboxImages.length}
               </div>
@@ -462,7 +450,6 @@ export function Samples() {
               </div>
             </div>
             
-            {/* Bottom Navigation Bar */}
             <div className="flex justify-between items-center mt-6">
               <div className="text-white text-xl">
                 {currentLightboxSample?.title}
