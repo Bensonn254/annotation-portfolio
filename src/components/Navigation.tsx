@@ -82,7 +82,7 @@ export function Navigation() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`px-4 py-2 text-2xl text-gray-700 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ${
+                className={`px-4 py-2 text-2xl font-bold text-gray-700 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ${
                   activeSection === item.id 
                     ? 'text-blue-700 underline underline-offset-4 decoration-4 decoration-blue-700' 
                     : 'hover:underline underline-offset-4 decoration-4 decoration-blue-700'
