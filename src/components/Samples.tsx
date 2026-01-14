@@ -169,9 +169,9 @@ export function Samples() {
     });
   };
 
-  const openLightbox = (sample: Sample) => {
+  const openLightbox = (sample: Sample, imageIndex: number = 0) => {
     setLightboxImages(sample.gallery);
-    setCurrentLightboxIndex(0);
+    setCurrentLightboxIndex(imageIndex);
     setShowAnnotated(false);
     setLightboxOpen(true);
     setCurrentLightboxSample(sample);
@@ -268,7 +268,7 @@ export function Samples() {
               </div>
 
               <div className={`grid lg:grid-cols-2 gap-8 mb-8 ${sample.type === 'segmentation' ? 'lg:gap-12' : ''}`}>
-                <div className="relative group cursor-pointer" onClick={() => openLightbox(sample)}>
+                <div className="relative group cursor-pointer" onClick={() => openLightbox(sample, sampleImageIndexes[sample.id] || 0)}>
                   <div className="absolute -top-3 left-4 bg-gray-700 text-white px-3 py-1 rounded-lg text-2xl z-10">
                     Before
                   </div>
@@ -287,8 +287,8 @@ export function Samples() {
                   </div>
                 </div>
 
-                <div className="relative group cursor-pointer" onClick={() => openLightbox(sample)}>
-                  <div className="absolute -top-20 right-0 bg-gray-800 text-white px-7 py-4 rounded-lg flex items-center space-x-2 z-20">
+                <div className="relative group cursor-pointer" onClick={() => openLightbox(sample, sampleImageIndexes[sample.id] || 0)}>
+                  <div className="absolute -top-20 right-0 bg-gray-800 text-white px-7 py-4 rounded-lg flex items-center space-x-2 z-10">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -412,51 +412,51 @@ export function Samples() {
             <div className="relative">
               <button
                 onClick={prevLightboxImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-colors z-10"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-200 z-10 shadow-lg backdrop-blur-sm"
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
               
               <button
                 onClick={nextLightboxImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-colors z-10"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 sm:p-3 rounded-full transition-all duration-200 z-10 shadow-lg backdrop-blur-sm"
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
 
-              <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-2 rounded-lg text-xl z-10">
+              <div className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-black/70 text-white px-2 py-1 sm:px-3 sm:py-2 rounded-lg text-sm sm:text-xl z-10 backdrop-blur-sm">
                 {currentLightboxIndex + 1} / {lightboxImages.length}
               </div>
 
               <img
                 src={showAnnotated ? lightboxImages[currentLightboxIndex]?.annotated : lightboxImages[currentLightboxIndex]?.original}
                 alt={showAnnotated ? "After annotation" : "Before annotation"}
-                className="max-w-full max-h-[80vh] object-contain rounded-lg cursor-zoom-out"
+                className="max-w-full max-h-[70vh] sm:max-h-[80vh] object-contain rounded-lg cursor-zoom-out"
                 onClick={closeLightbox}
               />
               
-              <div className="absolute top-4 left-4">
-                <div className={`px-4 py-2 rounded-lg text-xl font-bold ${
-                  showAnnotated ? 'bg-amber-500 text-white' : 'bg-gray-700 text-white'
+              <div className="absolute top-2 sm:top-4 left-2 sm:left-4">
+                <div className={`px-3 py-1 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-xl font-bold backdrop-blur-sm ${
+                  showAnnotated ? 'bg-amber-500/90 text-white' : 'bg-gray-700/90 text-white'
                 }`}>
                   {showAnnotated ? 'After' : 'Before'}
                 </div>
               </div>
               
-              <div className="absolute bottom-4 left-4 right-4 text-white text-center">
-                <div className="text-xl mb-2">
+              <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 text-white text-center">
+                <div className="text-sm sm:text-xl mb-2">
                   Image {currentLightboxIndex + 1} of {lightboxImages.length} - {showAnnotated ? 'Annotated' : 'Original'}
                 </div>
               </div>
             </div>
             
-            <div className="flex justify-between items-center mt-6">
-              <div className="text-white text-xl">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 sm:mt-6 gap-2 sm:gap-0">
+              <div className="text-white text-sm sm:text-xl max-w-[80%] sm:max-w-full">
                 {currentLightboxSample?.title}
               </div>
               <button
                 onClick={closeLightbox}
-                className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-colors text-xl"
+                className="bg-black/60 hover:bg-black/80 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full transition-all duration-200 text-sm sm:text-xl backdrop-blur-sm"
               >
                 Close (ESC)
               </button>
